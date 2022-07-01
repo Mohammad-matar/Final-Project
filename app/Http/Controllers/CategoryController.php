@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
@@ -8,108 +9,120 @@ use Illuminate\Support\Facades\Validator;
 
 
 class CategoryController extends Controller
-{        //get a category
-
-    public function getAll(){
+{
+    //get a category
+    public function getAll()
+    {
         $category = Category::all();
         $respond = [
-            'status'=>200,
-            'message'=> 'all categories',
-            'data'=> $category,
+            'status' => 200,
+            'message' => 'get all categories successfully',
+            'data' => $category,
         ];
 
         return $respond;
     }
 
-        //Get Categories by id
-
-    public function getById($id){
+    //Get Categories by id
+    public function getById($id)
+    {
         $category = Category::find($id);
-        if (isset ($category)){
+        if (isset($category)) {
             $respond = [
-                "status"=>200,
-                "data"=> $category
+                "status" => 200,
+                "data" => $category
             ];
             return $respond;
         }
-        return 'not found';
+        return $respond = [
+            "status" => 404,
+            "message" => "category not found"
+        ];
     }
 
-        // CREATE A NEW Category
-
-    public function create(Request $request){
+    // CREATE A NEW Category
+    public function create(Request $request)
+    {
         $category = new Category;
-        $validation = Validator::make($request-> all(),[
-            'category_name' => 'required |string | max:255',
-            'category_description' => 'required |string | max:255',
+        $validation = Validator::make($request->all(), [
+            'name' => 'required |string | max:255',
+            'description' => 'required |string | max:255',
         ]);
 
-        if($validation->fails()){
+        if ($validation->fails()) {
             $respond = [
-                "status"=>401,
-                "message"=> $validation -> errors()->first(),
+                "status" => 401,
+                "message" => $validation->errors()->first(),
             ];
-                return $respond;
+            return $respond;
         }
 
-        $category-> category_name =  $request-> category_name;
-        $category-> category_description =  $request-> category_description;
+        $category->name =  $request->name;
+        $category->description =  $request->description;
 
 
-        $category-> save();
+        $category->save();
         return $respond = [
-            'status'=> 200,
-            'message'=>'the category is updated',
-            'data'=>$category
+            'status' => 200,
+            'message' => 'the category is updated',
+            'data' => $category
         ];
     }
 
 
     //UPDATE AN ADMIN
 
-    public function update(Request $request ,$id){
+    public function update(Request $request, $id)
+    {
         $category = Category::find($id);
 
-        if(isset($category)){
-            $validation = Validator::make($request-> all(),[
-                'category_name' => 'string | max:255',
-                'category_description ' => 'string | max:255',
+        if (isset($category)) {
+            $validation = Validator::make($request->all(), [
+                'name' => 'string | max:255',
+                'description ' => 'string | max:255',
             ]);
 
-            if($validation->fails()){
+            if ($validation->fails()) {
                 $respond = [
-                    "status"=>401,
-                    "message"=> $validation -> errors()->first(),
+                    "status" => 401,
+                    "message" => $validation->errors()->first(),
                 ];
-                    return $respond;
+                return $respond;
             };
-            $request->category_name ? $category->category_name = $request->category_name: NULL;
-            $request->category_description ? $category->category_description = $request->category_description: NULL;
+            $request->name ? $category->name = $request->name : NULL;
+            $request->description ? $category->description = $request->description : NULL;
 
             $category->save();
 
             return $respond = [
-                'status'=>200,
-                'message'=> 'the category updated',
-                'data'=> $category,
-                ];
-        } 
-        return 'Admin not found';
+                'status' => 200,
+                'message' => 'the category updated',
+                'data' => $category,
+            ];
+        }
+        return $respond = [
+            'status' => 404,
+            'message' => 'Category not updated',
+        ];
     }
 
-         // Delete an admin
+    // Delete an admin
 
-    public function delete($id){
-        $category= Category::find($id);
-            if(isset($category)){
-                $category->delete();
-                $respond=[
-                    'status'=> 200,
-                    'message' => 'Category is deleted',
+    public function delete($id)
+    {
+        $category = Category::find($id);
+        if (isset($category)) {
+            $category->delete();
+            $respond = [
+                'status' => 200,
+                'message' => 'Category is deleted',
 
-                ];
-                return $respond;
-            }
-        return 'Admin not found';
+            ];
+            return $respond;
+        }
+        return $respond = [
+            'status' => 404,
+            'message' => 'Category not found',
+        ];
     }
-    }
+}

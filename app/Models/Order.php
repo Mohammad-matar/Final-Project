@@ -16,7 +16,10 @@ class Order extends Model
         'phone_number',
         'text'
     ];
-    public function Product(){
-        return $this->belongsToMany(Product::class);
-    }
+    // public function Product()
+    // {
+    //     return $this->belongsToMany(Product::class);
+    // }
+
+    // protected $with = ['Product'];
 }

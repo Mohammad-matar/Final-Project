@@ -3,82 +3,141 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Order;
+use Illuminate\Support\Facades\Validator;
+
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    //getall a Order
+
+    public function getAll()
     {
-        //
+        $order = Order::all();
+        $respond = [
+            'status' => 200,
+            'message' => ' get all Order',
+            'data' => $order,
+        ];
+
+        return $respond;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    //Get order by id
+
+    public function getById($id)
     {
-        //
+        $order = Order::find($id);
+        if (isset($order)) {
+            $respond = [
+                "status" => 200,
+                "data" => $order
+            ];
+            return $respond;
+        }
+        return $respond = [
+            "status" => 404,
+            "message" => 'order not found'
+        ];
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    // CREATE A NEW order
+
+    public function create(Request $request)
     {
-        //
+        $order = new Order;
+        $validation = Validator::make($request->all(), [
+            'username' => 'required |string | max:255',
+            'email' => 'required |string | max:255',
+            'location' => 'required | integer | min:1',
+            'phone_number' => 'required | integer ',
+            'text' => 'required | string | max:255'
+        ]);
+
+        if ($validation->fails()) {
+            $respond = [
+                "status" => 401,
+                "message" => $validation->errors()->first(),
+            ];
+            return $respond;
+        }
+
+        $order->username =  $request->username;
+        $order->email =  $request->email;
+        $order->location =  $request->location;
+        $order->phone_number = $request->phone_number;
+        $order->text = $request->text;
+
+
+        $order->save();
+        return $respond = [
+            'status' => 200,
+            'message' => 'the is the new order',
+            'data' => $order
+        ];
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+        //Update an order
     public function update(Request $request, $id)
     {
-        //
+        $order = Order::find($id);
+
+        if (isset($order)) {
+            $validation = Validator::make($request->all(), [
+                'username' => 'required |string | max:255',
+                'email' => 'required |string | max:255',
+                'location' => 'required | integer | min:1',
+                'phone_number' => 'required | integer ',
+                'text' => 'required | string | max:255'
+            ]);
+
+            if ($validation->fails()) {
+                $respond = [
+                    "status" => 401,
+                    "message" => $validation->errors()->first(),
+                ];
+                return $respond;
+            };
+
+            $order->username = $request->username;
+            $order->email = $request->email;
+            $order->location = $request->location;
+            $order->phone_number = $request->phone_number;
+            $order->text = $request->text;
+
+            $order->save();
+
+
+
+            return $respond = [
+                'status' => 200,
+                'message' => 'the order updated',
+                'data' => $order,
+            ];
+        }
+        return $respond = [
+            'status' => 404,
+            'message' => 'the order isnt updated',
+        ];
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+     // Delete an order
+
+     public function delete($id)
+     {
+         $order = Order::find($id);
+         if (isset($order)) {
+             $order->delete();
+             $respond = [
+                 'status' => 200,
+                 'message' => 'order is deleted',
+ 
+             ];
+             return $respond;
+         }
+         return $respond = [
+             'status' => 404,
+             'message' => 'the order isnt deleted',
+         ];
+     }
 }
