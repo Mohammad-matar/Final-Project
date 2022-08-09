@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Support\Facades\Validator;
 
 
 class OrderController extends Controller
 {
-    //getall a Order
+    //getall the Order
 
     public function getAll()
     {
@@ -41,7 +42,7 @@ class OrderController extends Controller
         ];
     }
 
-    // CREATE A NEW order
+    // CREATE An order
 
     public function create(Request $request)
     {
@@ -53,6 +54,13 @@ class OrderController extends Controller
             'phone_number' => 'required | integer ',
             'text' => 'required | string | max:255'
         ]);
+
+    //     public function getProductById($id)
+    // {
+    //     $order = Order::whereRelation("category",'product', "id", $id)->get();
+    //     foreach ($product as $each) {
+    //         $each->category->product;
+    //     }
 
         if ($validation->fails()) {
             $respond = [
@@ -77,7 +85,7 @@ class OrderController extends Controller
         ];
     }
 
-        //Update an order
+    //Update an order
     public function update(Request $request, $id)
     {
         $order = Order::find($id);
@@ -121,23 +129,23 @@ class OrderController extends Controller
         ];
     }
 
-     // Delete an order
+    // Delete an order
 
-     public function delete($id)
-     {
-         $order = Order::find($id);
-         if (isset($order)) {
-             $order->delete();
-             $respond = [
-                 'status' => 200,
-                 'message' => 'order is deleted',
- 
-             ];
-             return $respond;
-         }
-         return $respond = [
-             'status' => 404,
-             'message' => 'the order isnt deleted',
-         ];
-     }
+    public function delete($id)
+    {
+        $order = Order::find($id);
+        if (isset($order)) {
+            $order->delete();
+            $respond = [
+                'status' => 200,
+                'message' => 'order is deleted',
+
+            ];
+            return $respond;
+        }
+        return $respond = [
+            'status' => 404,
+            'message' => 'the order isnt deleted',
+        ];
+    }
 }

@@ -3,50 +3,48 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Category;
+use App\Models\Bundle;
 use Illuminate\Support\Facades\Validator;
 
 
-
-class CategoryController extends Controller
+class BundleController extends Controller
 {
-    //get a category
+    //get a bundles
     public function getAll()
     {
-        $category = Category::all();
+        $bundle = Bundle::all();
         $respond = [
             'status' => 200,
-            'message' => 'get all categories successfully',
-            'data' => $category,
+            'message' => 'get all bundles successfully',
+            'data' => $bundle,
         ];
 
         return $respond;
     }
-
-    //Get Categories by id
     public function getById($id)
     {
-        $category = Category::find($id);
-        if (isset($category)) {
+        $bundle = Bundle::find($id);
+        if (isset($bundle)) {
             $respond = [
-                "status" => 200,
-                "data" => $category
+                'status' => 200,
+                'data' => 'Bundle Found'
             ];
             return $respond;
         }
         return $respond = [
-            "status" => 404,
-            "message" => "category not found"
+            'status' => 404,
+            'message' => 'Bundle Not Found'
         ];
     }
 
-    // CREATE A NEW Category
+    // CREATE A NEW Bundle
     public function create(Request $request)
     {
-        $category = new Category;
+        $bundle = new Bundle;
         $validation = Validator::make($request->all(), [
             'name' => 'required |string | max:255',
-            'description' => 'required |string | max:255',
+            'price' => 'required | string',
+            'image' => ' string',
         ]);
 
         if ($validation->fails()) {
@@ -57,29 +55,29 @@ class CategoryController extends Controller
             return $respond;
         }
 
-        $category->name =  $request->name;
-        $category->description =  $request->description;
+        $bundle->name =  $request->name;
+        $bundle->price =  $request->price;
+        $bundle->image =  $request->image;
 
 
-        $category->save();
+        $bundle->save();
         return $respond = [
             'status' => 200,
-            'message' => 'the category is updated',
-            'data' => $category
+            'message' => 'the bundle is updated',
+            'data' => $bundle
         ];
     }
 
-
-    //UPDATE a Category
-
+    // Update The Bundle
     public function update(Request $request, $id)
     {
-        $category = Category::find($id);
+        $bundle = Bundle::find($id);
 
-        if (isset($category)) {
+        if (isset($bundle)) {
             $validation = Validator::make($request->all(), [
-                'name' => 'string | max:255',
-                'description ' => 'string | max:255',
+                'name' => 'required |string | max:255',
+                'price' => 'required | string',
+                'image' => ' string',
             ]);
 
             if ($validation->fails()) {
@@ -89,40 +87,40 @@ class CategoryController extends Controller
                 ];
                 return $respond;
             };
-            $request->name ? $category->name = $request->name : NULL;
-            $request->description ? $category->description = $request->description : NULL;
+            $request->name ? $bundle->name = $request->name : NULL;
+            $request->price ? $bundle->price = $request->price : NULL;
+            $request->image ? $bundle->image = $request->image : NULL;
 
-            $category->save();
+            $bundle->save();
 
             return $respond = [
                 'status' => 200,
-                'message' => 'the category updated',
-                'data' => $category,
+                'message' => 'bundle is updated',
+                'data' => $bundle,
             ];
         }
         return $respond = [
             'status' => 404,
-            'message' => 'Category not updated',
+            'message' => 'bundle not updated',
         ];
     }
-
-    // Delete a category
+    // Delete Bundle
 
     public function delete($id)
     {
-        $category = Category::find($id);
-        if (isset($category)) {
-            $category->delete();
+        $bundle = Bundle::find($id);
+        if (isset($bundle)) {
+            $bundle->delete();
             $respond = [
                 'status' => 200,
-                'message' => 'Category is deleted',
+                'message' => 'bundle is deleted',
 
             ];
             return $respond;
         }
         return $respond = [
             'status' => 404,
-            'message' => 'Category not found',
+            'message' => 'bundle not found',
         ];
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\BundleController;
 
 
 
@@ -50,7 +51,7 @@ Route::group(['prefix' => 'categories'], function () {
 Route::group(['prefix' => 'products'], function () {
     Route::get('/', [ProductController::class, 'getAll']);
     Route::get('/{id}', [ProductController::class, 'getById']);
-    Route::get('/category/{id}',[ProductController::class,'getByCategory']);
+    Route::get('/category/{id}', [ProductController::class, 'getByCategory']);
     Route::post('/', [ProductController::class, 'create']);
     Route::put('/{id}', [ProductController::class, 'update']);
     Route::delete('/{id}', [ProductController::class, 'delete']);
@@ -63,4 +64,13 @@ Route::group(['prefix' => 'orders'], function () {
     Route::post('/', [OrderController::class, 'create']);
     Route::put('/{id}', [OrderController::class, 'update']);
     Route::delete('/{id}', [OrderController::class, 'delete']);
+});
+
+//Bundle Route
+Route::group(['prefix' => 'bundles'], function () {
+    Route::get('/', [BundleController::class, 'getAll']);
+    Route::get('/{id}', [BundleController::class, 'getById']);
+    Route::post('/', [BundleController::class, 'create']);
+    Route::put('/{id}', [BundleController::class, 'update']);
+    Route::delete('/{id}', [BundleController::class, 'delete']);
 });
